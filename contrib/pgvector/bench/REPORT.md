@@ -27,7 +27,7 @@ IVFFlat training uses PostgreSQL's internal global PRNG, which SQL `setseed()` d
 
 | Item | Value |
 | --- | --- |
-| Environment | WSL2 Linux, kernel `6.18.33.2-microsoft-standard-WSL2` |
+| Environment | Ubuntu 24.04.4 LTS (Noble Numbat) on WSL2, kernel `6.18.33.2-microsoft-standard-WSL2` |
 | CPU | AMD Ryzen 9 9900X, 12 cores / 24 threads, 32 MiB L3 |
 | Memory | 23 GiB RAM, 6 GiB swap; about 19 GiB available during capture |
 | Storage | WSL virtual ext4, 1 TiB, 896 GiB available, reported `ROTA=1` |
@@ -156,12 +156,7 @@ L2, IP, and normalized Cosine all bypass fmgr in the built-in `vector` path; oth
 
 The reported quick matrix is a warm-memory validation: the 108.4 MiB table plus index pair fits in 23 GiB host RAM, follows exact-truth generation, and uses a per-point warmup. It does not claim that every page remained in PostgreSQL's 128 MiB shared buffer pool.
 
-The reproducibility tool also defines, but this report did not execute:
-
-- `memory`: 1,000,000 rows at 768 dimensions, lists 100/500/1000, explicit `pg_prewarm`, 15-second warmup, 60-second samples, three repeats;
-- `disk`: 8,000,000 rows at 384 dimensions, lists=1000, controlled PostgreSQL stop, `sync`, and `posix_fadvise(POSIX_FADV_DONTNEED)` over every 1 GiB relation segment before each sample.
-
-Those standard matrices are intentionally left as required release-host follow-up. No 1M/8M result is inferred from the 100k WSL run.
+The reproducibility tool can also generate larger `memory` (1,000,000 rows, 768 dimensions) and `disk` (8,000,000 rows, 384 dimensions) profiles, but those are out of scope for this report and were not executed. No result at those sizes is inferred from the 100k WSL run.
 
 ## Reproduction
 
